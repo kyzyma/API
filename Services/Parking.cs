@@ -17,99 +17,66 @@ namespace netapi.Services
                 instance = new Parking();
             return instance;
         }
-        void CheckCarsOnPaking(string name, Vehicle typeOfVehicle)
+        bool CheckCarsOnPaking(Car checkCar)
         {
             foreach (Car car in Setting.carsOnPaking)
             {
-                if (car.Name == name && car.TypeOfCAr == typeOfVehicle)
+                if (car.Name == checkCar.Name && car.TypeOfCAr == checkCar.TypeOfCAr)
                 {
                     Console.WriteLine($"This car <{car.Name}> can't put on the parknig, bacause it has been on the parknig yet");
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
-
-        public void AddCarOnParking()
+     
+         public void AddCarOnParking(Car addCar, int time)
         {
-            bool NotexistInCars = true;
-            string name, type;
-            Vehicle typeOfVehicle;
-            int time = 0;
+            bool NotexistInCars = true;            
+           // int time = 0;         
 
-            Setting.EnterNameType(out name, out type);
-
-            try
-            {
-                typeOfVehicle = (Vehicle)Enum.Parse(typeof(Vehicle), type.ToUpper());
-                Console.Write("Enter time of parking: ");
-                time = int.Parse(Console.ReadLine());
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine($"ERROR: Type Of Vehicle is wrong ({e.Message})");
+            if(CheckCarsOnPaking(addCar))
                 return;
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine($"ERROR: type of time data is wrong ({e.Message})");
-                return;
-            }
 
-            Console.WriteLine();
-
-            CheckCarsOnPaking(name, typeOfVehicle);
             // add car on Parking
             if (Setting.carsOnPaking.Count < 10)
-            {
-                Car newCar = new Car(name, type);
+            {                
                 // check the availability of a new Car in the list of cars
                 foreach (Car car in Setting.cars)
                 {
-                    if (car.Name == name && car.TypeOfCAr == typeOfVehicle)
-                    {
+                    if (car.Name == addCar.Name && car.TypeOfCAr == addCar.TypeOfCAr)
+                    {                        
                         Setting.carsOnPaking.Add(car);
                         car.PayByParking(time);
+                        addCar.Balance = car.Balance;
                         NotexistInCars = false;
                     }
                 }
 
                 if (NotexistInCars)
                 {
-                    Setting.cars.Add(newCar);
-                    Setting.carsOnPaking.Add(newCar);
-                    newCar.PayByParking(time);
+                    Setting.cars.Add(addCar);
+                    Setting.carsOnPaking.Add(addCar);
+                    addCar.PayByParking(time);
                 }
-                Console.WriteLine($"Parking: New car <{newCar.Name}> has been added to parking");
+                Console.WriteLine($"Parking: New car <{addCar.Name}> has been added to parking");
                 Console.WriteLine();
             }
             else
                 Console.WriteLine("There isn't free place on the parking");
-        }
-
-        public void RemoveCarFromParking()
+        }    
+     
+    public void RemoveCarFromParking(Car dCar)
         {
-            bool ExistOnPaking = false;
+            bool ExistOnPaking = false; 
             Car existCar = null;
-            string name, type;
-            Vehicle typeOfVehicle;
-
-            Setting.EnterNameType(out name, out type);
-
-            try
-            {
-                typeOfVehicle = (Vehicle)Enum.Parse(typeof(Vehicle), type.ToUpper());
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine($"ERROR: Type Of Vehicle is wrong ({e.Message})");
-                return;
-            }
-
+        
             foreach (Car car in Setting.carsOnPaking)
             {
-                if (car.Name == name && car.TypeOfCAr == typeOfVehicle)
+                if (car.Name == dCar.Name && car.TypeOfCAr == dCar.TypeOfCAr)
                 {
                     existCar = car;
+                    dCar.Balance = car.Balance;
                     ExistOnPaking = true;
                 }
             }
@@ -117,55 +84,35 @@ namespace netapi.Services
             if (ExistOnPaking)
             {
                 Setting.carsOnPaking.Remove(existCar);
-                Console.WriteLine($"Parking: Car <{name}> has been removed from parking");
+                Console.WriteLine($"Parking: Car <{dCar.Name}> has been removed from parking");
             }
             else
-                Console.WriteLine($"The car {name} is not parked");
+                Console.WriteLine($"The car {dCar.Name} is not parked");
             Console.WriteLine();
         }
-
-        public void RefillBalance()
+    
+    public void RefillBalance(double amount, Car refCar)
         {
             Car newCar = null;
             bool notExist = true;
-            string name, type;
-            Vehicle typeOfVehicle;
-            double amount = 0;
-
-            Setting.EnterNameType(out name, out type);
-
-            try
-            {
-                typeOfVehicle = (Vehicle)Enum.Parse(typeof(Vehicle), type.ToUpper());
-                Console.Write("Enter the amount of the account replenishment: ");
-                amount = double.Parse(Console.ReadLine());
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine($"ERROR: Type Of Vehicle is wrong ({e.Message})");
-                return;
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine($"ERROR: type of amount data is wrong ({e.Message})");
-                return;
-            }
-
+                      
             foreach (Car car in Setting.cars)
             {
-                if (car.Name == name && car.TypeOfCAr == typeOfVehicle)
-                {
+                if (car.Name == refCar.Name && car.TypeOfCAr == refCar.TypeOfCAr)
+                {                    
                     Console.Write($"Balance at the beginning: {car.Balance}, ");
                     car.Balance = car.Balance + amount;
                     Console.WriteLine($" Balance <{car.Name}> at the end: : {car.Balance} $");
                     notExist = false;
+                    refCar.Balance = car.Balance;
                     break;
                 }
             }
 
             if (notExist)
             {
-                newCar = new Car(name, type, amount);
+                newCar = new Car(refCar.Name, refCar.TypeOfCAr, amount);
+                refCar.Balance = newCar.Balance;
                 Setting.cars.Add(newCar);
                 Console.WriteLine($"On Balance <{newCar.Name}>: {newCar.Balance} $");
             }

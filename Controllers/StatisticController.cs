@@ -14,25 +14,25 @@ namespace netapi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return Setting.ShowListAllCars();
+            return Ok(Setting.ShowListAllCars());
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<double> Get(int id)
+        public ActionResult<string> Get(int id)
         {
             switch (id)
             {
                 case 1:
-                    return Setting.ShowBalanceParking();                       
+                    return Ok(Setting.ShowBalanceParking());                       
                 case 2:
-                    return Setting.ShowAmountMoneyEarnd();
-                 case 3:  
-                    return Setting.ShowNumberBusyPlaces();
-                 case 4: 
-                    return Setting.ShowNumberFreePlaces();
+                    return Ok(Setting.ShowAmountMoneyEarnd());
+                case 3:  
+                    return Ok(Setting.ShowNumberBusyPlaces());
+                case 4: 
+                    return Ok(Setting.ShowNumberFreePlaces());                
             }
-            return 0;
+            return "0";
         }
 
         // POST api/values

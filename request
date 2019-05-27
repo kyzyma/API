@@ -1,1 +1,66 @@
- GET https://localhost:5001/api/Static
+ // Add car to parking for a while time
+ POST https://localhost:5001/api/Manag/50 HTTP/1.1
+content-type: application/json
+
+{
+    "Name": "Lada",
+    "TypeOfCAr": "car"
+}
+
+###
+// Refill the balance of a particular Vehicleу 
+PUT https://localhost:5001/api/Manag/90 HTTP/1.1
+content-type: application/json
+
+{
+"Name": "Lada",
+"TypeOfCAr": "car"
+}
+
+###
+// Pick up the vehicle from the parking
+DELETE https://localhost:5001/api/Manag HTTP/1.1
+content-type: application/json
+
+{    
+    "Name": "Lada",
+    "TypeOfCAr": "car"
+}
+
+#####
+// All transactions parking for the last minute
+ GET https://localhost:5001/api/Manag/1
+
+#####
+// All transactions history from file
+ GET https://localhost:5001/api/Manag/2
+
+#####
+// List all of vehicles
+ GET https://localhost:5001/api/Statistic
+
+#####
+// Current balance of Parking
+
+  GET https://localhost:5001/api/Statistic/1
+
+#####
+// The amount of money earned in the last minute
+  GET https://localhost:5001/api/Statistic/2
+
+ #####
+// Number busy places on the Parking
+ 
+  GET https://localhost:5001/api/Statistic/3
+
+  #####
+
+// Number free places on the Parking
+
+  GET https://localhost:5001/api/Statistic/4
+  
+
+
+
+
+  

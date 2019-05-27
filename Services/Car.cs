@@ -12,6 +12,9 @@ namespace netapi.Services
         public Vehicle TypeOfCAr { get; set; }
         public double Balance { get; set; }
 
+         public Car()
+        {}
+
         public Car(string name, string typeOfVehicle)
         {
             Name = name;
@@ -26,6 +29,12 @@ namespace netapi.Services
             Balance = groshi;
         }
 
+        public Car(string name, Vehicle typeOfVehicle, double groshi)
+        {
+            Name = name;
+            TypeOfCAr = typeOfVehicle;
+            Balance = groshi;
+        }
         public void PayByParking(int time)
         {
             double payWithFine = 0;

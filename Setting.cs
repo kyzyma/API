@@ -24,61 +24,54 @@ namespace netapi
         }
 
         public static List<string> ShowListAllCars()
-        {
-           //int i = 1;
+        {           
             List<string> NameCar = new List<string>();
             if (Setting.carsOnPaking.Count == 0)
-            {
-               // Console.WriteLine("List of cars on Parknig is empty");
-               // Console.WriteLine();
+            {              
                 return new List<string>();
             }
 
-            Console.WriteLine("List of cars on Parknig");
+           // Console.WriteLine("List of cars on Parknig");
             foreach (Car car in Setting.carsOnPaking)
-            {
-                //Console.WriteLine($"{i++}. {car.Name}");
+            {                
                 NameCar.Add(car.Name);
             }
-           //Console.WriteLine();
-           return NameCar;
+           
+            return NameCar;
         }
 
         public static double ShowAmountMoneyEarnd()
         {
-            double money = 3;
+            double money = 0;
             foreach (Transaction transaction in Setting.transactions)
             {
                 if (transaction.DateTimeTransac > (DateTime.Now.AddMinutes(-1)))
                     money += transaction.Amount;
             }
-           // System.Console.WriteLine($"The amount of money earned in the last minute: {money} $");
-           // Console.WriteLine();
+           
            return money;
         }
-        public static void ShowListAllTransactions()
+        public static List<string> ShowListAllTransacForMinute()
         {
-            int i = 1;
+            List<string> ListOfTransac = new List<string>();
             if (Setting.transactions.Count == 0)
             {
-                Console.WriteLine("List of Transactions is empty");
-                Console.WriteLine();
-                return;
+                Console.WriteLine("List of Transactions is empty");                
+                return ListOfTransac;
             }
 
             Console.WriteLine("List of Transactions for the last minute");
             foreach (Transaction transaction in Setting.transactions)
             {
                 if (transaction.DateTimeTransac > (DateTime.Now.AddMinutes(-1)))
-                    Console.WriteLine($"{i++}. {transaction.DateTimeTransac}  |  {transaction.NameCar}  |  {transaction.Amount}");
+                    ListOfTransac.Add($"{transaction.DateTimeTransac}  |  {transaction.NameCar}  |  {transaction.Amount}");
             }
-            Console.WriteLine();
+           return ListOfTransac;
         }
         public static double ShowNumberFreePlaces()
         {
             int freePlaces = Setting.maxCapacity - Setting.carsOnPaking.Count;
-           // Console.WriteLine($"Free Places: {freePlaces} and Busy Places: {Setting.carsOnPaking.Count}");
-           //Console.WriteLine();
+          
             return freePlaces;
         }
 
@@ -86,7 +79,7 @@ namespace netapi
         {                      
             return Setting.carsOnPaking.Count;
         }
-        public static void EnterNameType(out string name, out string type)
+         public static void EnterNameType(out string name, out string type)
         {
             Console.Write("Enter Name of car: ");
             name = Console.ReadLine();
@@ -113,8 +106,9 @@ namespace netapi
             }
         }
 
-        public static void ReadFromoFileTransactions()
+        public static List<string> ReadFromoFileTransactions()
         {
+            List<string> ListOfTransac = new List<string>();
             string path = @"D:\transactions.txt";
 
             try
@@ -122,14 +116,15 @@ namespace netapi
                 Console.WriteLine("******Read all transactions from file********");
                 using (StreamReader sr = new StreamReader(path))
                 {
-                    Console.WriteLine(sr.ReadToEnd());
-                }
-                Console.WriteLine();
+                    ListOfTransac.Add(sr.ReadToEnd());
+                }                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
+            
+            return ListOfTransac;
         }
     }
 }
